@@ -50,9 +50,9 @@ $args = array(
 
 	// plugin variable
 	$api_provider = 'http://api.trees.id/';
-	$connector = '?';
+	$connector = '&';
 	if (get_option('permalink_structure' )) {
-		$connector = '&';
+		$connector = '?';
 	}
 	$lot_page = $permalink.$connector.'lot_id=[lot]';
 	$tree_page = $permalink.$connector.'lot_id=[lot]&tree_offset=[offset]';
