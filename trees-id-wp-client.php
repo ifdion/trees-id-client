@@ -26,7 +26,7 @@ function trees_id_client( $atts ) {
 	$permalink = get_permalink($post->ID );
 
 	// plugin variable
-	$api_provider = 'http://api.trees.idn/';
+	$api_provider = 'http://api.trees.id/';
 	$connector = '?';
 	if (get_option('permalink_structure' )) {
 		$connector = '&';
