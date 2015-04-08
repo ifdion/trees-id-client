@@ -1,6 +1,6 @@
 <?php
 
-	$project_detail = $item_detail->data[0];
+	$project_detail = $item_detail;
 	$project_image = 'http://placehold.it/200x200';
 	if ($project_detail->img_project) {
 		$project_image = $project_detail->img_project;

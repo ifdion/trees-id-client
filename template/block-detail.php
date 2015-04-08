@@ -1,6 +1,6 @@
 <?php
 
-	$block_detail = $item_detail->data[0];
+	$block_detail = $item_detail;
 
 	$block_image = 'http://placehold.it/200x200';
 	if ($block_detail->img_block) {

@@ -1,12 +1,10 @@
 <?php
 
-	$lot_detail = $item_detail->data[0];
-
+	$lot_detail = $item_detail;
 	$lot_image = 'http://placehold.it/200x200';
 	if ($lot_detail->img_lot) {
 		$lot_image = $lot_detail->img_lot;
 	}
-	$tree_page = $permalink.$connector.'lot_id=[lot]&tree_offset=[offset]';
 
 	// echo '<pre>';
 	// print_r($lot_detail);
