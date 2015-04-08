@@ -534,4 +534,9 @@
   border: 1px solid #666;
 }
 
+.tid-statistic {
+  display: flex;
+  background-color: #008181;
+}
+
 /*# sourceMappingURL=main.css.map */

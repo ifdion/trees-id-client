@@ -13,8 +13,8 @@
 		'current'            => $current_page,
 		'show_all'           => false,
 		'end_size'           => 2,
-		'mid_size'           => 3,
-		'prev_next'          => true,
+		'mid_size'           => 1,
+		'prev_next'          => false,
 		'prev_text'          => __('« '),
 		'next_text'          => __(' »'),
 		'type'               => 'plain',
@@ -23,7 +23,7 @@
 		// 'before_page_number' => '',
 		// 'after_page_number'  => ''
 	);
-	echo '<div>';
+	echo '<div class="tid-pagination">';
 	echo paginate_links( $args );
 	echo '</div>';
 
