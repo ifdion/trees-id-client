@@ -591,6 +591,7 @@
 .tid-block-nav ul {
   list-style-type: none;
   margin-left: 0;
+  padding-left: 0;
   display: flex;
 }
 .tid-program-nav li,
