@@ -8,6 +8,12 @@ Author: Saklik
 Author URI: http://trees.id/
 */
 
+/**
+ * add shortcode
+ *
+ * @return void
+ * @author 
+ **/
 
 function trees_id_client( $atts ) {
 	$atts = shortcode_atts(
