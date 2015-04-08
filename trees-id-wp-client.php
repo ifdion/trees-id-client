@@ -16,6 +16,23 @@ Author URI: http://trees.id/
  **/
 
 function trees_id_client( $atts ) {
+
+$args = array(
+    'timeout'     => 500,
+    'redirection' => 5,
+    'httpversion' => '1.0',
+    'user-agent'  => 'WordPress/' . $wp_version . '; ' . get_bloginfo( 'url' ),
+    'blocking'    => true,
+    'headers'     => array(),
+    'cookies'     => array(),
+    'body'        => null,
+    'compress'    => false,
+    'decompress'  => true,
+    'sslverify'   => true,
+    'stream'      => false,
+    'filename'    => null
+);
+
 	$atts = shortcode_atts(
 		array(
 			'program_id' => 0,
@@ -69,7 +86,7 @@ function trees_id_client( $atts ) {
 			// lot detail API call
 			$lot_endpoint = $api_provider.'?object=lot&lot_id='. $lot_id;
 			if ( false == ( $lot_detail = get_transient( 'tid-lot-'.$lot_id ) ) ) {
-				$response = wp_remote_get( $lot_endpoint );
+				$response = wp_remote_get( $lot_endpoint , $args);
 				if (is_wp_error($response)) {
 					return '<p>'.$response->get_error_message().'</p>';
 				} else {
@@ -84,7 +101,7 @@ function trees_id_client( $atts ) {
 				if (is_wp_error($response)) {
 					return '<p>'.$response->get_error_message().'</p>';
 				} else {
-					$response = wp_remote_get( $api_endpoint );
+					$response = wp_remote_get( $api_endpoint , $args);
 					$tree_detail = json_decode(substr($response['body'], 1, -1));
 					$tree_detail = $tree_detail->data[0];
 					set_transient( 'tid-tree-'.$lot_id.'-'.$tree_offset, $tree_detail, 60*10*1 );
@@ -97,7 +114,7 @@ function trees_id_client( $atts ) {
 			$api_endpoint = $api_provider.'?object='.$entity.'&id='. $item_id;
 			if ( false == ( $item_detail = get_transient('tid-'. $entity.'-'.$item_id ) ) ) {
 
-				$response = wp_remote_get( $api_endpoint );
+				$response = wp_remote_get( $api_endpoint , $args);
 				if (is_wp_error($response)) {
 					return '<p>'.$response->get_error_message().'</p>';
 				} else {
@@ -157,7 +174,7 @@ function trees_id_client( $atts ) {
 
 		// call API
 		if ( false == ( $item_archive = get_transient('tid-'.$view.'-pg'. $program_id . $subtax .$page  ) ) ) {
-			$response = wp_remote_get( $api_endpoint );
+			$response = wp_remote_get( $api_endpoint , $args);
 
 			if (is_wp_error($response)) {
 				return '<p>'.$response->get_error_message().'</p>';
@@ -192,7 +209,7 @@ function trees_id_client( $atts ) {
 		$api_endpoint = $api_provider.'?object=program&id='. $program_id;
 		if ( false == ( $program_detail = get_transient('tid-program-'.$program_id ) ) ) {
 
-			$response = wp_remote_get( $api_endpoint );
+			$response = wp_remote_get( $api_endpoint , $args);
 			if (is_wp_error($response)) {
 				return '<p>'.$response->get_error_message().'</p>';
 			} else {
