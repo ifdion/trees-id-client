@@ -241,7 +241,7 @@ add_shortcode( 'trees-id', 'trees_id_client' );
 
 function custom_shortcode_scripts() {
 	global $post;
-	if( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'trees-id') ) {
+	if( (is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'trees-id')) || (is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'trees-id-view-tree')) ) {
 		if (WP_DEBUG == true) {
 			wp_register_style( 'trees-id', plugins_url( 'trees-id-client/css/trees-id-client.css' ), array(),'0.0' );
 			wp_register_script( 'trees-id-client-plugin',plugins_url( 'trees-id-client/js/trees-id-client-plugin.js' ), array(),'0.0',true);
@@ -278,6 +278,44 @@ function process_delete_tid_transient() {
 }
 add_action('wp_ajax_delete_tid_transient', 'process_delete_tid_transient');
 add_action('wp_ajax_nopriv_delete_tid_transient', 'process_delete_tid_transient');
+
+
+/**
+ * shortcode view tree
+ *
+ * @return void
+ * @author 
+ **/
+function treesID_view_tree( $atts ) {
+	$atts = shortcode_atts( array(
+		'foo' => 'no foo',
+		'tree' => null,
+		//'project' => 'no project'
+	), $atts, 'bartag' );
+
+	$tree = "{$atts['tree']}";
+
+	global $post;
+    $post_id=$post->ID;
+    $post_meta_treeID = get_post_meta( $post_id, 'tree_id', true );
+
+    if ( !empty($post_meta_treeID) ){
+    	$tree_id_str = implode(",", $post_meta_treeID);
+    }
+
+	// $content = "";
+	// $content .= "Slug : c $cek";
+
+	// return $content;
+
+	ob_start();
+	include 'template/tree-multiple.php';
+	$output = ob_get_contents();
+	ob_end_clean();
+	return $output;
+	
+}
+add_shortcode( 'trees-id-view-tree', 'treesID_view_tree' );
 
 
 ?>
