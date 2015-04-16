@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: Trees ID WP Client
+Plugin Name: Trees ID Client
 Plugin URI: http://trees.id
-Description: Trees ID WP Client.
+Description: Trees ID Client.
 Version: 1.0
 Author: Saklik
 Author URI: http://trees.id/
