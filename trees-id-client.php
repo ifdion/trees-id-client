@@ -17,21 +17,21 @@ Author URI: http://trees.id/
 
 function trees_id_client( $atts ) {
 
-$args = array(
-    'timeout'     => 500,
-    'redirection' => 5,
-    'httpversion' => '1.0',
-    'user-agent'  => 'WordPress/' . $wp_version . '; ' . get_bloginfo( 'url' ),
-    'blocking'    => true,
-    'headers'     => array(),
-    'cookies'     => array(),
-    'body'        => null,
-    'compress'    => false,
-    'decompress'  => true,
-    'sslverify'   => true,
-    'stream'      => false,
-    'filename'    => null
-);
+	$args = array(
+		'timeout'     => 500,
+		'redirection' => 5,
+		'httpversion' => '1.0',
+		'user-agent'  => 'WordPress/' . get_bloginfo('version' ) . '; ' . get_bloginfo( 'url' ),
+		'blocking'    => true,
+		'headers'     => array(),
+		'cookies'     => array(),
+		'body'        => null,
+		'compress'    => false,
+		'decompress'  => true,
+		'sslverify'   => true,
+		'stream'      => false,
+		'filename'    => null
+	);
 
 	$atts = shortcode_atts(
 		array(
@@ -286,7 +286,7 @@ add_action('wp_ajax_nopriv_delete_tid_transient', 'process_delete_tid_transient'
  * @return void
  * @author 
  **/
-function treesID_view_tree( $atts ) {
+function trees_id_view_tree( $atts ) {
 	$atts = shortcode_atts( array(
 		'foo' => 'no foo',
 		'tree' => null,
@@ -296,18 +296,17 @@ function treesID_view_tree( $atts ) {
 	$tree = "{$atts['tree']}";
 
 	global $post;
-    $post_id=$post->ID;
-    $post_meta_treeID = get_post_meta( $post_id, 'tree_id', true );
+	$post_id = $post->ID;
+	$post_meta_treeID = get_post_meta( $post_id, 'tree_id', true );
 
-    if ( !empty($post_meta_treeID) ){
-    	$tree_id_str = implode(",", $post_meta_treeID);
-    }
-
-	// $content = "";
-	// $content .= "Slug : c $cek";
-
-	// return $content;
-    
+	if ( !empty($post_meta_treeID) ){
+		if (is_array($post_meta_treeID)) {
+			$tree_id_str = implode(",", $post_meta_treeID);
+		} else {
+			$tree_id_str = $post_meta_treeID;
+		}
+	}
+	
 	ob_start();
 	include 'template/tree-multiple.php';
 	$output = ob_get_contents();
@@ -315,7 +314,7 @@ function treesID_view_tree( $atts ) {
 	return $output;
 	
 }
-add_shortcode( 'trees-id-view-tree', 'treesID_view_tree' );
+add_shortcode( 'trees-id-view-tree', 'trees_id_view_tree' );
 
 
 ?>

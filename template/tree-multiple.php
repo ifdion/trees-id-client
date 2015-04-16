@@ -4,9 +4,8 @@
 	// print_r($tree_detail);
 	// print_r($lot_detail);
 	// echo '</pre>';
-	echo "$tree_id_str <br>";
-	
-	echo "Terima Kasih Sudah Membeli Pohon";
+	// echo "$tree_id_str <br>";
+	// echo "Terima Kasih Sudah Membeli Pohon";
 ?>
 <div id="" class="tid-tree-detail tid-shortcode">
 	
