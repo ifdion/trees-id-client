@@ -243,14 +243,13 @@ function custom_shortcode_scripts() {
 	global $post;
 	if( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'trees-id') ) {
 		if (WP_DEBUG == true) {
-			wp_register_style( 'trees-id', plugins_url( 'trees-id-wp-client/css/trees-id.css' ) );
-			wp_register_script( 'trees-id-map-plugin',plugins_url( 'trees-id-wp-client/js/trees-id-map-plugin.js' ), array(),'0.0',true);
-			wp_register_script( 'trees-id-map',plugins_url( 'trees-id-wp-client/js/trees-id-map.js' ), array('trees-id-map-plugin'),'0.0',true);
-			wp_register_script( 'trees-id',plugins_url( 'trees-id-wp-client/js/main.js' ),array('underscore','trees-id-map','trees-id-map-plugin'),'0.0',true);
+			wp_register_style( 'trees-id', plugins_url( 'trees-id-client/css/trees-id-client.css' ), array(),'0.0' );
+			wp_register_script( 'trees-id-client-plugin',plugins_url( 'trees-id-client/js/trees-id-client-plugin.js' ), array(),'0.0',true);
+			wp_register_script( 'trees-id',plugins_url( 'trees-id-client/js/main.js' ),array('underscore','trees-id-client-plugin'),'0.0',true);
 
 		} else {
-			wp_register_style( 'trees-id', plugins_url( 'trees-id-wp-client/css/trees-id.min.css' ) );
-			wp_register_script( 'trees-id',plugins_url( 'trees-id-wp-client/js/trees-id.min.js' ),array('underscore'),'0.0',true);
+			wp_register_style( 'trees-id', plugins_url( 'trees-id-client/css/trees-id-client.min.css' ), array(),'0.0' );
+			wp_register_script( 'trees-id',plugins_url( 'trees-id-client/js/trees-id-client.min.js' ),array('underscore'),'0.0',true);
 		}
 
 		wp_enqueue_style('trees-id' );

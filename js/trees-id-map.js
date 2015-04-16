@@ -332,7 +332,7 @@ function treeMap(elementID){
 	var mapObject = document.getElementById(elementID);
 	var treeID = mapObject.getAttribute('data-id');
 
-	if (treeID) {
+	if (treeID != undefined) {
 		var APIurl = 'http://api.trees.id/?object=tree&callback=callback&single_id=' + treeID;
 	} else {
 		var lotID = mapObject.getAttribute('data-lot_id');
@@ -340,14 +340,17 @@ function treeMap(elementID){
 		var APIurl = 'http://api.trees.id/?object=tree&callback=callback&lot_id=' + lotID +'&tree_offset='+offset;
 	}
 
-	console.log(mapObject, treeID, APIurl);
-
 	_jsonp.send(APIurl, {
 		onSuccess: function(APIresult){
+
 			window.map = new L.Map('trees-id-map', {center: APIresult.data[0].tree_kordinat , zoom: markerBreakPoint, layers: [Esri_WorldImagery]});
 			window.map.scrollWheelZoom.disable();
-			var treeDetail = '<img src="' +  APIresult.data[0].img_tree +'" width="200">';
-			var treeMarker = L.marker(APIresult.data[0].tree_kordinat, {icon: treeIcon}).addTo(window.map).bindPopup(treeDetail);
+			APIresult.data.forEach(function(value,index){
+				console.log(value, index);
+				var treeDetail = '<img src="' +  value.img_tree +'" width="200">';
+				var treeMarker = L.marker(value.tree_kordinat, {icon: treeIcon}).addTo(window.map).bindPopup(treeDetail).openPopup();
+			});
+
 		},
 		 onTimeout: function(){
 			console.log('timeout!');

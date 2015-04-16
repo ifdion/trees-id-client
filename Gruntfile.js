@@ -26,15 +26,15 @@ module.exports = function(grunt) {
           sourcemap: 'none'
         },
         files: {
-          'css/trees-id.css': 'sass/main.scss'
+          'css/trees-id-client.css': 'sass/main.scss'
         }
       }
     },
     cssmin: {
         dist: {
             files: {
-                'css/trees-id.min.css': [
-                    'css/trees-id.css'
+                'css/trees-id-client.min.css': [
+                    'css/trees-id-client.css'
                 ]
             }
         }
@@ -45,13 +45,13 @@ module.exports = function(grunt) {
       },
       plugins: {
         src: [pluginList],
-        dest: 'js/trees-id-plugin.js',
+        dest: 'js/trees-id-client-plugin.js',
       },
     },
     uglify: {
       plugins: {
         files: {
-          'js/trees-id.min.js': [buildList]
+          'js/trees-id-client.min.js': [buildList]
         }
       },
     },
@@ -61,7 +61,7 @@ module.exports = function(grunt) {
         outputFile: 'js/modernizr.min.js',
         files: {
           'src': [
-            ['js/trees-id.min.js'],
+            ['js/trees-id-client.min.js'],
             // ['css/main.min.css']
           ]
         },
@@ -89,7 +89,7 @@ module.exports = function(grunt) {
         },
         files: [
           'css/main.scss',
-          'css/trees-id.css',
+          'css/trees-id-client.css',
           'js/main.js',
           '*/*.php',
           '*.php',
