@@ -90,7 +90,8 @@ function tid_shortcode( $atts ) {
 			$api_endpoint = $api_provider.'?object='.$entity.'&lot_id='. $lot_id.'&tree_offset='. $tree_offset;
 
 			// lot detail API call
-			$lot_endpoint = $api_provider.'?object=lot&lot_id='. $lot_id;
+			$lot_endpoint = $api_provider.'?object=lot&id='. $lot_id;
+
 			if ( false == ( $lot_detail = get_transient( 'tid-lot-'.$lot_id ) ) ) {
 				$response = wp_remote_get( $lot_endpoint , $args);
 				if (is_wp_error($response)) {
@@ -102,12 +103,17 @@ function tid_shortcode( $atts ) {
 				}
 			}
 
+				// echo $lot_endpoint;
+				// echo '<pre>';
+				// print_r($response);
+				// echo '</pre>';
+
 			// tree detail API call
 			if ( false == ( $tree_detail = get_transient('tid-'. $entity.'-'.$lot_id.'-'.$tree_offset ) ) ) {
+				$response = wp_remote_get( $api_endpoint , $args);
 				if (is_wp_error($response)) {
 					return '<p>'.$response->get_error_message().'</p>';
 				} else {
-					$response = wp_remote_get( $api_endpoint , $args);
 					$tree_detail = json_decode(substr($response['body'], 1, -1));
 					$tree_detail = $tree_detail->data[0];
 					set_transient( 'tid-tree-'.$lot_id.'-'.$tree_offset, $tree_detail, 60*10*1 );

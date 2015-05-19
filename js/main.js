@@ -24,9 +24,8 @@ function renderMap(e){
 var mapTrigger = document.getElementById('render-map-btn');
 
 if (mapTrigger) {
-	mapTrigger.addEventListener('click', renderMap);
-	
 	var modal = new VanillaModal(opts);
+	mapTrigger.addEventListener('click', renderMap);
 
 } else {
 	var mapObject = document.getElementById('trees-id-map');
