@@ -1,11 +1,16 @@
 <?php
 	global $post;
 	$permalink = get_permalink( $post->ID );
+	$program_detail = $item_detail;
 
 	$connector = '?';
 	if (strpos($permalink, '?')) {
 		$connector = '&';
 	}
+
+	echo '<pre>';
+	print_r($program_detail);
+	echo '</pre>';
 ?>
 <div class="tid-program-detail tid-shortcode">
 	<h1><?php echo $program_detail->nama_program ?></h1>

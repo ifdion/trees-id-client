@@ -14,8 +14,7 @@ Author URI: http://trees.id/
  * @return void
  * @author 
  **/
-
-function trees_id_client( $atts ) {
+function tid_shortcode( $atts ) {
 
 	$args = array(
 		'timeout'     => 500,
@@ -36,11 +35,17 @@ function trees_id_client( $atts ) {
 	$atts = shortcode_atts(
 		array(
 			'program_id' => 0,
+			'project_id' => 0,
+			'block_id' => 0,
+			'lot_id' => 0,
 		), $atts, 'trees-id' );
 	$program_id = $atts['program_id'];
+	$project_id = $atts['project_id'];
+	$block_id = $atts['block_id'];
+	$lot_id = $atts['lot_id'];
 
 	// empty program_id attribute on shortcode
-	if ($program_id == 0 || !is_numeric($program_id)) {
+	if ($program_id == 0 && $project_id == 0 && $block_id == 0 && $lot_id == 0) {
 		return;
 	}
 
@@ -205,32 +210,39 @@ function trees_id_client( $atts ) {
 
 	} else {
 
+
+		if ($program_id != 0) {
+			$entity = 'program';
+			$entity_id = $program_id;
+		} else {
+			$entity = 'project';
+			$entity_id = $project_id;
+		}
 		// get program data
-		$api_endpoint = $api_provider.'?object=program&id='. $program_id;
-		if ( false == ( $program_detail = get_transient('tid-program-'.$program_id ) ) ) {
+		$api_endpoint = $api_provider.'?object='.$entity.'&id='. $entity_id;
+		if ( false == ( $program_detail = get_transient('tid-program-'.$entity_id ) ) ) {
 
 			$response = wp_remote_get( $api_endpoint , $args);
 			if (is_wp_error($response)) {
 				return '<p>'.$response->get_error_message().'</p>';
 			} else {
-				$program_json = substr($response['body'], 1, -1);
-				$program_detail = json_decode($program_json);
-				$program_detail = $program_detail->data[0];
-				set_transient( 'tid-program-'.$program_id, $program_detail, 60*10*1 );
+				$entity_json = substr($response['body'], 1, -1);
+				$item_detail = json_decode($entity_json);
+				$item_detail = $item_detail->data[0];
+				set_transient( 'tid-'.$entity.'-'.$entity_id, $item_detail, 60*10*1 );
 			}
 		}
 
 		// setup output
 		ob_start();
-		include_once 'template/program-detail.php';
+		include_once 'template/'.$entity.'-detail.php';
 		$output = ob_get_contents();
 		ob_end_clean();
 		return $output;
 
 	}
 }
-add_shortcode( 'trees-id', 'trees_id_client' );
-
+add_shortcode( 'trees-id', 'tid_shortcode' );
 
 /**
  * register additional stylesheet and script file if shortcode is present
@@ -238,8 +250,7 @@ add_shortcode( 'trees-id', 'trees_id_client' );
  * @return void
  * @author 
  **/
-
-function custom_shortcode_scripts() {
+function tid_shortcode_scripts() {
 	global $post;
 	if( (is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'trees-id')) || (is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'trees-id-view-tree')) ) {
 		if (WP_DEBUG == true) {
@@ -257,7 +268,7 @@ function custom_shortcode_scripts() {
 
 	}
 }
-add_action( 'wp_enqueue_scripts', 'custom_shortcode_scripts');
+add_action( 'wp_enqueue_scripts', 'tid_shortcode_scripts');
 
 /**
  * delete saved transient for debuging purposes
@@ -279,14 +290,13 @@ function process_delete_tid_transient() {
 add_action('wp_ajax_delete_tid_transient', 'process_delete_tid_transient');
 add_action('wp_ajax_nopriv_delete_tid_transient', 'process_delete_tid_transient');
 
-
 /**
  * shortcode view tree
  *
  * @return void
  * @author 
  **/
-function trees_id_view_tree( $atts ) {
+function tid_view_tree_shortcode( $atts ) {
 	$atts = shortcode_atts( array(
 		'foo' => 'no foo',
 		'tree' => null,
@@ -312,9 +322,8 @@ function trees_id_view_tree( $atts ) {
 	$output = ob_get_contents();
 	ob_end_clean();
 	return $output;
-	
 }
-add_shortcode( 'trees-id-view-tree', 'trees_id_view_tree' );
+add_shortcode( 'trees-id-view-tree', 'tid_view_tree_shortcode' );
 
 
 ?>

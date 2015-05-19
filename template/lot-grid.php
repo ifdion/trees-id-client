@@ -6,7 +6,7 @@
 
 	$thumbnail_bg = '';
 	if ($item_detail->img_lot) {
-		$thumbnail_bg = 'background-image: url('.$item_detail->img_lot.');';
+		$thumbnail_bg = 'background-image: url(\''.$item_detail->img_lot.'\');';
 	}
 ?>
 <div class="tid-lot-grid">
