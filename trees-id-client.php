@@ -130,6 +130,12 @@ function tid_shortcode( $atts ) {
 			}
 		}
 
+		if (locate_template('tid/'.$entity.'-detail.php') != '') {
+			$template = get_stylesheet_directory().'/tid/'.$entity.'-detail.php';
+		} else {
+			$template = 'template/'.$entity.'-detail.php';
+		}
+
 		ob_start();
 		include 'template/'.$entity.'-detail.php';
 		$output = ob_get_contents();
@@ -192,8 +198,16 @@ function tid_shortcode( $atts ) {
 		// setup output
 		$output = '';
 		foreach ($item_archive->data as $key => $item_detail){
+
+			if (locate_template('tid/'.$entity.'-grid.php') != '') {
+				$template = get_stylesheet_directory().'/tid/'.$entity.'-grid.php';
+			} else {
+				$template = 'template/'.$entity.'-grid.php';
+			}
+
+			// setup output
 			ob_start();
-			include 'template/'.$view.'-grid.php';
+			include_once $template;
 			$output_part = ob_get_contents();
 			ob_end_clean();
 
@@ -201,8 +215,16 @@ function tid_shortcode( $atts ) {
 		}
 		$pagination = '';
 		if ($item_archive->totalPage > 1) {
+
+			if (locate_template('tid/template-pagination.php') != '') {
+				$template = get_stylesheet_directory().'tid/template-pagination.php';
+			} else {
+				$template = 'template/pagination.php';
+			}
+
+
 			ob_start();
-			include 'template/pagination.php';
+			include $template;
 			$pagination = ob_get_contents();
 			ob_end_clean();
 		}
@@ -233,9 +255,15 @@ function tid_shortcode( $atts ) {
 			}
 		}
 
+		if (locate_template('tid/'.$entity.'-detail.php') != '') {
+			$template = get_stylesheet_directory().'/tid/'.$entity.'-detail.php';
+		} else {
+			$template = 'template/'.$entity.'-detail.php';
+		}
+
 		// setup output
 		ob_start();
-		include_once 'template/'.$entity.'-detail.php';
+		include_once $template;
 		$output = ob_get_contents();
 		ob_end_clean();
 		return $output;
