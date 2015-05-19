@@ -38,11 +38,13 @@ function tid_shortcode( $atts ) {
 			'project_id' => 0,
 			'block_id' => 0,
 			'lot_id' => 0,
+			'template' => '',
 		), $atts, 'trees-id' );
 	$program_id = $atts['program_id'];
 	$project_id = $atts['project_id'];
 	$block_id = $atts['block_id'];
 	$lot_id = $atts['lot_id'];
+	$custom_template = $atts['template'];
 
 	// empty program_id attribute on shortcode
 	if ($program_id == 0 && $project_id == 0 && $block_id == 0 && $lot_id == 0) {
@@ -82,9 +84,8 @@ function tid_shortcode( $atts ) {
 		$entity = 'project';
 	}
 
-
-
 	if (isset($entity)) {
+
 		if ($entity == 'tree') {
 			$api_endpoint = $api_provider.'?object='.$entity.'&lot_id='. $lot_id.'&tree_offset='. $tree_offset;
 
@@ -130,14 +131,20 @@ function tid_shortcode( $atts ) {
 			}
 		}
 
+		$template = 'template/'.$entity.'-detail.php';
+
+		// check for custom default template
 		if (locate_template('tid/'.$entity.'-detail.php') != '') {
 			$template = get_stylesheet_directory().'/tid/'.$entity.'-detail.php';
-		} else {
-			$template = 'template/'.$entity.'-detail.php';
+		}
+
+		// check for custom template
+		if ($custom_template != '' && locate_template($custom_template) != '') {
+			$template = get_stylesheet_directory().'/'.$custom_template;
 		}
 
 		ob_start();
-		include 'template/'.$entity.'-detail.php';
+		include $template;
 		$output = ob_get_contents();
 		ob_end_clean();
 		return $output;
@@ -197,6 +204,7 @@ function tid_shortcode( $atts ) {
 
 		// setup output
 		$output = '';
+		$output .= '<div class="tid-lot-archive">';
 		foreach ($item_archive->data as $key => $item_detail){
 
 			if (locate_template('tid/'.$view.'-grid.php') != '') {
@@ -213,6 +221,7 @@ function tid_shortcode( $atts ) {
 
 			$output = $output.$output_part;
 		}
+		$output .= '</div>';
 		$pagination = '';
 		if ($item_archive->totalPage > 1) {
 
@@ -221,7 +230,6 @@ function tid_shortcode( $atts ) {
 			} else {
 				$template = 'template/pagination.php';
 			}
-
 
 			ob_start();
 			include $template;
@@ -255,10 +263,16 @@ function tid_shortcode( $atts ) {
 			}
 		}
 
+		$template = 'template/'.$entity.'-detail.php';
+
+		// check for custom default template
 		if (locate_template('tid/'.$entity.'-detail.php') != '') {
 			$template = get_stylesheet_directory().'/tid/'.$entity.'-detail.php';
-		} else {
-			$template = 'template/'.$entity.'-detail.php';
+		}
+
+		// check for custom template
+		if ($custom_template != '' && locate_template($custom_template) != '') {
+			$template = get_stylesheet_directory().'/'.$custom_template;
 		}
 
 		// setup output
@@ -325,31 +339,98 @@ add_action('wp_ajax_nopriv_delete_tid_transient', 'process_delete_tid_transient'
  * @author 
  **/
 function tid_view_tree_shortcode( $atts ) {
-	$atts = shortcode_atts( array(
-		'foo' => 'no foo',
-		'tree' => null,
-		//'project' => 'no project'
-	), $atts, 'bartag' );
 
-	$tree = "{$atts['tree']}";
+	$args = array(
+		'timeout'     => 500,
+		'redirection' => 5,
+		'httpversion' => '1.0',
+		'user-agent'  => 'WordPress/' . get_bloginfo('version' ) . '; ' . get_bloginfo( 'url' ),
+		'blocking'    => true,
+		'headers'     => array(),
+		'cookies'     => array(),
+		'body'        => null,
+		'compress'    => false,
+		'decompress'  => true,
+		'sslverify'   => true,
+		'stream'      => false,
+		'filename'    => null
+	);
 
-	global $post;
-	$post_id = $post->ID;
-	$post_meta_treeID = get_post_meta( $post_id, 'tree_id', true );
+	$atts = shortcode_atts(
+		array(
+			'search' => 0,
+			'meta_key' => 0,
+			'lot_page' => 0,
+		), $atts, 'trees-id-view-tree' );
+	
+	$search_by = $atts['search'];
+	$meta_key = $atts['meta_key'];
+	$lot_page = $atts['lot_page'];
 
-	if ( !empty($post_meta_treeID) ){
-		if (is_array($post_meta_treeID)) {
-			$tree_id_str = implode(",", $post_meta_treeID);
-		} else {
-			$tree_id_str = $post_meta_treeID;
+	// echo $lot_page;
+
+	// get lot page
+	$lot_page = get_permalink(get_page_by_path($lot_page));
+	$connector = '&';
+	if (get_option('permalink_structure' )) {
+		$connector = '?';
+	}
+
+	// get tree ids from meta key
+	if ($meta_key != 0) {
+		global $post;
+		$post_id = $post->ID;
+		$post_meta_treeID = get_post_meta( $post_id, 'tree_id', true );
+
+		if ( !empty($post_meta_treeID) ){
+			if (is_array($post_meta_treeID)) {
+				$tree_id_str = implode(",", $post_meta_treeID);
+			} else {
+				$tree_id_str = $post_meta_treeID;
+			}
 		}
 	}
-	
+
+	if ($search_by) {
+
+		if ($search_by == 'nohp') {
+
+			// search tree by nohp
+			if (isset($_GET['nohp'])){
+				$nohp = $_GET['nohp'];
+				$url =  'http://api.trees.id/?object=tree&nohp='.$nohp.'&json_ori=yes';
+
+				$response = wp_remote_get($url );
+				$json_api = json_decode($response['body'], true);
+
+				if ($json_api['success'] == 1){
+					$tree_id_str = '';
+					$tree_lot = [];
+					$dataTree = $json_api['data'];
+
+					foreach ($dataTree as $key => $value) {
+						$tree_id_str .= $value['id_tree'].',';
+						if (!in_array($value['tree_lot_id'], $tree_lot)) {
+							$tree_lot[$value['tree_lot_id']] =  $value['nama_lot'];
+						}
+					}
+					$tree_id_str = trim($tree_id_str, ",");
+				}
+			}
+		}
+	}
+
+	// echo '<pre>';
+	// print_r($dataTree);
+	// print_r($tree_lot);
+	// echo '</pre>';
+
 	ob_start();
 	include 'template/tree-multiple.php';
 	$output = ob_get_contents();
 	ob_end_clean();
 	return $output;
+
 }
 add_shortcode( 'trees-id-view-tree', 'tid_view_tree_shortcode' );
 
