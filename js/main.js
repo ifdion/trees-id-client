@@ -2,8 +2,6 @@
 
 var opts = {
 	onOpen : function() {
-		console.log('onOpen hook');
-
 		// var mapObjectID = this.getAttribute('href');
 		var mapObject = document.getElementById('trees-id-map');
 		var mapType = mapObject.getAttribute('data-map-type');
@@ -18,8 +16,6 @@ var opts = {
 	}
 }
 
-var modal = new VanillaModal(opts);
-
 function renderMap(e){
 	e.preventDefault();
 	modal.open('#modal-map');
@@ -29,6 +25,9 @@ var mapTrigger = document.getElementById('render-map-btn');
 
 if (mapTrigger) {
 	mapTrigger.addEventListener('click', renderMap);
+	
+	var modal = new VanillaModal(opts);
+
 } else {
 	var mapObject = document.getElementById('trees-id-map');
 	if (mapObject) {
