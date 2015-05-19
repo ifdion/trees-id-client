@@ -199,15 +199,15 @@ function tid_shortcode( $atts ) {
 		$output = '';
 		foreach ($item_archive->data as $key => $item_detail){
 
-			if (locate_template('tid/'.$entity.'-grid.php') != '') {
-				$template = get_stylesheet_directory().'/tid/'.$entity.'-grid.php';
+			if (locate_template('tid/'.$view.'-grid.php') != '') {
+				$template = get_stylesheet_directory().'/tid/'.$view.'-grid.php';
 			} else {
-				$template = 'template/'.$entity.'-grid.php';
+				$template = 'template/'.$view.'-grid.php';
 			}
 
 			// setup output
 			ob_start();
-			include_once $template;
+			include $template;
 			$output_part = ob_get_contents();
 			ob_end_clean();
 
@@ -242,7 +242,7 @@ function tid_shortcode( $atts ) {
 		}
 		// get program data
 		$api_endpoint = $api_provider.'?object='.$entity.'&id='. $entity_id;
-		if ( false == ( $program_detail = get_transient('tid-program-'.$entity_id ) ) ) {
+		if ( false == ( $item_detail = get_transient('tid-program-'.$entity_id ) ) ) {
 
 			$response = wp_remote_get( $api_endpoint , $args);
 			if (is_wp_error($response)) {

@@ -8,6 +8,7 @@ module.exports = function(grunt) {
   var pluginList = [
     'bower_components/leaflet/dist/leaflet.js',
     'bower_components/leaflet-heat/index.js',
+    'js/vanilla-modal.js',
     'js/trees-id-map.js'
   ];
 
@@ -15,6 +16,7 @@ module.exports = function(grunt) {
     'bower_components/leaflet/dist/leaflet.js',
     'bower_components/leaflet-heat/index.js',
     'js/trees-id-map.js',
+    'js/vanilla-modal.js',
     'js/main.js',
   ];
 

@@ -16,7 +16,444 @@ break}e||r.push(t),t.touches=r.slice(),t.changedTouches=[t],n(t)};if(t[a+"touchs
  Leaflet.heat, a tiny and fast heatmap plugin for Leaflet.
  https://github.com/Leaflet/Leaflet.heat
 */
-L.HeatLayer=L.Class.extend({initialize:function(t,i){this._latlngs=t,L.setOptions(this,i)},setLatLngs:function(t){return this._latlngs=t,this.redraw()},addLatLng:function(t){return this._latlngs.push(t),this.redraw()},setOptions:function(t){return L.setOptions(this,t),this._heat&&this._updateOptions(),this.redraw()},redraw:function(){return!this._heat||this._frame||this._map._animating||(this._frame=L.Util.requestAnimFrame(this._redraw,this)),this},onAdd:function(t){this._map=t,this._canvas||this._initCanvas(),t._panes.overlayPane.appendChild(this._canvas),t.on("moveend",this._reset,this),t.options.zoomAnimation&&L.Browser.any3d&&t.on("zoomanim",this._animateZoom,this),this._reset()},onRemove:function(t){t.getPanes().overlayPane.removeChild(this._canvas),t.off("moveend",this._reset,this),t.options.zoomAnimation&&t.off("zoomanim",this._animateZoom,this)},addTo:function(t){return t.addLayer(this),this},_initCanvas:function(){var t=this._canvas=L.DomUtil.create("canvas","leaflet-heatmap-layer leaflet-layer"),i=this._map.getSize();t.width=i.x,t.height=i.y;var a=this._map.options.zoomAnimation&&L.Browser.any3d;L.DomUtil.addClass(t,"leaflet-zoom-"+(a?"animated":"hide")),this._heat=simpleheat(t),this._updateOptions()},_updateOptions:function(){this._heat.radius(this.options.radius||this._heat.defaultRadius,this.options.blur),this.options.gradient&&this._heat.gradient(this.options.gradient),this.options.max&&this._heat.max(this.options.max)},_reset:function(){var t=this._map.containerPointToLayerPoint([0,0]);L.DomUtil.setPosition(this._canvas,t);var i=this._map.getSize();this._heat._width!==i.x&&(this._canvas.width=this._heat._width=i.x),this._heat._height!==i.y&&(this._canvas.height=this._heat._height=i.y),this._redraw()},_redraw:function(){var t,i,a,e,s,n,h,o,r,_=[],d=this._heat._r,l=this._map.getSize(),m=new L.LatLngBounds(this._map.containerPointToLatLng(L.point([-d,-d])),this._map.containerPointToLatLng(l.add([d,d]))),c=void 0===this.options.maxZoom?this._map.getMaxZoom():this.options.maxZoom,u=1/Math.pow(2,Math.max(0,Math.min(c-this._map.getZoom(),12))),g=d/2,f=[],p=this._map._getMapPanePos(),v=p.x%g,w=p.y%g;for(t=0,i=this._latlngs.length;i>t;t++)m.contains(this._latlngs[t])&&(a=this._map.latLngToContainerPoint(this._latlngs[t]),s=Math.floor((a.x-v)/g)+2,n=Math.floor((a.y-w)/g)+2,r=(this._latlngs[t].alt||1)*u,f[n]=f[n]||[],e=f[n][s],e?(e[0]=(e[0]*e[2]+a.x*r)/(e[2]+r),e[1]=(e[1]*e[2]+a.y*r)/(e[2]+r),e[2]+=r):f[n][s]=[a.x,a.y,r]);for(t=0,i=f.length;i>t;t++)if(f[t])for(h=0,o=f[t].length;o>h;h++)e=f[t][h],e&&_.push([Math.round(e[0]),Math.round(e[1]),Math.min(e[2],1)]);this._heat.data(_).draw(),this._frame=null},_animateZoom:function(t){var i=this._map.getZoomScale(t.zoom),a=this._map._getCenterOffset(t.center)._multiplyBy(-i).subtract(this._map._getMapPanePos());this._canvas.style[L.DomUtil.TRANSFORM]=L.DomUtil.getTranslateString(a)+" scale("+i+")"}}),L.heatLayer=function(t,i){return new L.HeatLayer(t,i)};;'use strict';
+L.HeatLayer=L.Class.extend({initialize:function(t,i){this._latlngs=t,L.setOptions(this,i)},setLatLngs:function(t){return this._latlngs=t,this.redraw()},addLatLng:function(t){return this._latlngs.push(t),this.redraw()},setOptions:function(t){return L.setOptions(this,t),this._heat&&this._updateOptions(),this.redraw()},redraw:function(){return!this._heat||this._frame||this._map._animating||(this._frame=L.Util.requestAnimFrame(this._redraw,this)),this},onAdd:function(t){this._map=t,this._canvas||this._initCanvas(),t._panes.overlayPane.appendChild(this._canvas),t.on("moveend",this._reset,this),t.options.zoomAnimation&&L.Browser.any3d&&t.on("zoomanim",this._animateZoom,this),this._reset()},onRemove:function(t){t.getPanes().overlayPane.removeChild(this._canvas),t.off("moveend",this._reset,this),t.options.zoomAnimation&&t.off("zoomanim",this._animateZoom,this)},addTo:function(t){return t.addLayer(this),this},_initCanvas:function(){var t=this._canvas=L.DomUtil.create("canvas","leaflet-heatmap-layer leaflet-layer"),i=this._map.getSize();t.width=i.x,t.height=i.y;var a=this._map.options.zoomAnimation&&L.Browser.any3d;L.DomUtil.addClass(t,"leaflet-zoom-"+(a?"animated":"hide")),this._heat=simpleheat(t),this._updateOptions()},_updateOptions:function(){this._heat.radius(this.options.radius||this._heat.defaultRadius,this.options.blur),this.options.gradient&&this._heat.gradient(this.options.gradient),this.options.max&&this._heat.max(this.options.max)},_reset:function(){var t=this._map.containerPointToLayerPoint([0,0]);L.DomUtil.setPosition(this._canvas,t);var i=this._map.getSize();this._heat._width!==i.x&&(this._canvas.width=this._heat._width=i.x),this._heat._height!==i.y&&(this._canvas.height=this._heat._height=i.y),this._redraw()},_redraw:function(){var t,i,a,e,s,n,h,o,r,_=[],d=this._heat._r,l=this._map.getSize(),m=new L.LatLngBounds(this._map.containerPointToLatLng(L.point([-d,-d])),this._map.containerPointToLatLng(l.add([d,d]))),c=void 0===this.options.maxZoom?this._map.getMaxZoom():this.options.maxZoom,u=1/Math.pow(2,Math.max(0,Math.min(c-this._map.getZoom(),12))),g=d/2,f=[],p=this._map._getMapPanePos(),v=p.x%g,w=p.y%g;for(t=0,i=this._latlngs.length;i>t;t++)m.contains(this._latlngs[t])&&(a=this._map.latLngToContainerPoint(this._latlngs[t]),s=Math.floor((a.x-v)/g)+2,n=Math.floor((a.y-w)/g)+2,r=(this._latlngs[t].alt||1)*u,f[n]=f[n]||[],e=f[n][s],e?(e[0]=(e[0]*e[2]+a.x*r)/(e[2]+r),e[1]=(e[1]*e[2]+a.y*r)/(e[2]+r),e[2]+=r):f[n][s]=[a.x,a.y,r]);for(t=0,i=f.length;i>t;t++)if(f[t])for(h=0,o=f[t].length;o>h;h++)e=f[t][h],e&&_.push([Math.round(e[0]),Math.round(e[1]),Math.min(e[2],1)]);this._heat.data(_).draw(),this._frame=null},_animateZoom:function(t){var i=this._map.getZoomScale(t.zoom),a=this._map._getCenterOffset(t.center)._multiplyBy(-i).subtract(this._map._getMapPanePos());this._canvas.style[L.DomUtil.TRANSFORM]=L.DomUtil.getTranslateString(a)+" scale("+i+")"}}),L.heatLayer=function(t,i){return new L.HeatLayer(t,i)};;"use strict";
+
+var _prototypeProperties = function (child, staticProps, instanceProps) {
+  if (staticProps) Object.defineProperties(child, staticProps);
+  if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
+};
+
+/**
+ * @class VanillaModal
+ * @version 1.1.2
+ * @author Ben Ceglowski
+ */
+var VanillaModal = (function () {
+  /**
+   * @param {Object} [userSettings]
+   */
+  function VanillaModal(userSettings) {
+    this.$$ = {
+      modal: ".modal",
+      modalInner: ".modal-inner",
+      modalContent: ".modal-content",
+      open: "[rel=\"modal:open\"]",
+      close: "[rel=\"modal:close\"]",
+      page: "body",
+      "class": "modal-visible",
+      loadClass: "vanilla-modal",
+      clickOutside: true,
+      closeKey: 27,
+      transitions: true,
+      transitionEnd: null,
+      onBeforeOpen: function () {},
+      onBeforeClose: function () {},
+      onOpen: function () {},
+      onClose: function () {}
+    };
+
+    this._applyUserSettings(userSettings);
+    this.error = false;
+    this.isOpen = false;
+    this.current = null;
+    this.open = this._open.bind(this);
+    this.close = this._close.bind(this);
+    this.$$.transitionEnd = this._transitionEndVendorSniff();
+    this.$ = this._setupDomNodes();
+
+    if (!this.error) {
+      this._addLoadedCssClass();
+      this._events().add();
+    } else {
+      console.error("Please fix errors before proceeding.");
+    }
+  }
+
+  _prototypeProperties(VanillaModal, null, {
+    _applyUserSettings: {
+
+      /**
+       * @param {Object} userSettings
+       */
+      value: function ApplyUserSettings(userSettings) {
+        if (typeof userSettings === "object") {
+          for (var i in userSettings) {
+            if (userSettings.hasOwnProperty(i)) {
+              this.$$[i] = userSettings[i];
+            }
+          }
+        }
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _transitionEndVendorSniff: {
+      value: function TransitionEndVendorSniff() {
+        if (this.$$.transitions === false) return;
+        var el = document.createElement("div");
+        var transitions = {
+          transition: "transitionend",
+          OTransition: "otransitionend",
+          MozTransition: "transitionend",
+          WebkitTransition: "webkitTransitionEnd"
+        };
+        for (var i in transitions) {
+          if (transitions.hasOwnProperty(i) && el.style[i] !== undefined) {
+            return transitions[i];
+          }
+        }
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _getNode: {
+
+      /**
+       * @param {String} selector
+       * @param {Node} parent
+       */
+      value: function GetNode(selector, parent) {
+        var targetNode = parent || document;
+        var node = targetNode.querySelector(selector);
+        if (!node) {
+          this.error = true;
+          return console.error(selector + " not found in document.");
+        }
+        return node;
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _setupDomNodes: {
+      value: function SetupDomNodes() {
+        var $ = {};
+        $.modal = this._getNode(this.$$.modal);
+        $.page = this._getNode(this.$$.page);
+        $.modalInner = this._getNode(this.$$.modalInner, this.modal);
+        $.modalContent = this._getNode(this.$$.modalContent, this.modal);
+        return $;
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _addLoadedCssClass: {
+      value: function AddLoadedCssClass() {
+        this._addClass(this.$.page, this.$$.loadClass);
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _addClass: {
+
+      /**
+       * @param {Node} el
+       * @param {String} className
+       */
+      value: function AddClass(el, className) {
+        if (el instanceof HTMLElement === false) return;
+        var cssClasses = el.className.split(" ");
+        if (cssClasses.indexOf(className) === -1) {
+          cssClasses.push(className);
+        }
+        el.className = cssClasses.join(" ");
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _removeClass: {
+
+      /**
+       * @param {Node} el
+       * @param {String} className
+       */
+      value: function RemoveClass(el, className) {
+        if (el instanceof HTMLElement === false) return;
+        var cssClasses = el.className.split(" ");
+        if (cssClasses.indexOf(className) > -1) {
+          cssClasses.splice(cssClasses.indexOf(className), 1);
+        }
+        el.className = cssClasses.join(" ");
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _setOpenId: {
+      value: function SetOpenId() {
+        var id = this.current.id || "anonymous";
+        this.$.page.setAttribute("data-current-modal", id);
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _removeOpenId: {
+      value: function RemoveOpenId() {
+        this.$.page.removeAttribute("data-current-modal");
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _getElementContext: {
+
+      /**
+       * @param {mixed} e
+       */
+      value: function GetElementContext(e) {
+        if (e && typeof e.hash === "string") {
+          return document.querySelector(e.hash);
+        } else if (typeof e === "string") {
+          return document.querySelector(e);
+        } else {
+          return console.error("No selector supplied to open()");
+        }
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _open: {
+
+      /**
+       * @param {Event} e
+       */
+      value: function Open(e) {
+        this._releaseNode();
+        this.current = this._getElementContext(e);
+        if (this.current instanceof HTMLElement === false) return console.error("VanillaModal target must exist on page.");
+        if (typeof this.$$.onBeforeOpen === "function") this.$$.onBeforeOpen.call(this);
+        this._captureNode();
+        this._addClass(this.$.page, this.$$["class"]);
+        this._setOpenId();
+        this.isOpen = true;
+        if (typeof this.$$.onOpen === "function") this.$$.onOpen.call(this);
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _detectTransition: {
+      value: function DetectTransition() {
+        var css = window.getComputedStyle(this.$.modal, null);
+        var transitionDuration = ["transitionDuration", "oTransitionDuration", "MozTransitionDuration", "webkitTransitionDuration"];
+        var hasTransition = transitionDuration.filter(function (i) {
+          if (typeof css[i] === "string" && parseFloat(css[i]) > 0) {
+            return true;
+          }
+        });
+        return hasTransition.length ? true : false;
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _close: {
+
+      /**
+       * @param {Event} e
+       */
+      value: function Close(e) {
+        if (typeof this.$$.onBeforeClose === "function") this.$$.onBeforeClose.call(this);
+        this._removeClass(this.$.page, this.$$["class"]);
+        var transitions = this._detectTransition();
+        if (this.$$.transitions && this.$$.transitionEnd && transitions) {
+          this._closeModalWithTransition();
+        } else {
+          this._closeModal();
+        }
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _closeModal: {
+      value: function CloseModal() {
+        this._removeOpenId(this.$.page);
+        this._releaseNode();
+        this.isOpen = false;
+        this.current = null;
+        if (typeof this.$$.onClose === "function") this.$$.onClose.call(this);
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _closeModalWithTransition: {
+      value: function CloseModalWithTransition() {
+        var _closeTransitionHandler = (function () {
+          this.$.modal.removeEventListener(this.$$.transitionEnd, _closeTransitionHandler);
+          this._closeModal();
+        }).bind(this);
+        this.$.modal.addEventListener(this.$$.transitionEnd, _closeTransitionHandler);
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _captureNode: {
+      value: function CaptureNode() {
+        while (this.current.childNodes.length > 0) {
+          this.$.modalContent.appendChild(this.current.childNodes[0]);
+        }
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _releaseNode: {
+      value: function ReleaseNode() {
+        while (this.$.modalContent.childNodes.length > 0) {
+          this.current.appendChild(this.$.modalContent.childNodes[0]);
+        }
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _closeKeyHandler: {
+
+      /**
+       * @param {Event} e
+       */
+      value: function CloseKeyHandler(e) {
+        if (typeof this.$$.closeKey !== "number") return;
+        if (e.which === this.$$.closeKey && this.isOpen === true) {
+          e.preventDefault();
+          this.close();
+        }
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _outsideClickHandler: {
+
+      /**
+       * @param {Event} e
+       */
+      value: function OutsideClickHandler(e) {
+        if (this.$$.clickOutside !== true) return;
+        var node = e.target;
+        while (node != document.body) {
+          if (node === this.$.modalInner) return;
+          node = node.parentNode;
+        }
+        this.close();
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _matches: {
+
+      /**
+       * @param {Event} e
+       * @param {String} selector
+       */
+      value: function Matches(e, selector) {
+        var el = e.target;
+        var matches = (el.document || el.ownerDocument).querySelectorAll(selector);
+        for (var i = 0; i < matches.length; i++) {
+          var child = el;
+          while (child !== document.body) {
+            if (child === matches[i]) return child;
+            child = child.parentNode;
+          }
+        }
+        return null;
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _delegateOpen: {
+
+      /**
+       * @param {Event} e
+       */
+      value: function DelegateOpen(e) {
+        var matches = this._matches(e, this.$$.open);
+        if (matches) {
+          e.preventDefault();
+          return this.open(matches);
+        }
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _delegateClose: {
+
+      /**
+       * @param {Event} e
+       */
+      value: function DelegateClose(e) {
+        if (this._matches(e, this.$$.close)) {
+          e.preventDefault();
+          return this.close();
+        }
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    },
+    _events: {
+
+      /**
+       * @private {Function} add
+       */
+      value: function Events() {
+        var _closeKeyHandler = this._closeKeyHandler.bind(this);
+        var _outsideClickHandler = this._outsideClickHandler.bind(this);
+        var _delegateOpen = this._delegateOpen.bind(this);
+        var _delegateClose = this._delegateClose.bind(this);
+
+        var add = function () {
+          this.$.modal.addEventListener("click", _outsideClickHandler);
+          document.addEventListener("keydown", _closeKeyHandler);
+          document.addEventListener("click", _delegateOpen);
+          document.addEventListener("click", _delegateClose);
+        };
+
+        this.destroy = function () {
+          this.close();
+          this.$.modal.removeEventListener("click", _outsideClickHandler);
+          document.removeEventListener("keydown", _closeKeyHandler);
+          document.removeEventListener("click", _delegateOpen);
+          document.removeEventListener("click", _delegateClose);
+        };
+
+        return {
+          add: add.bind(this)
+        };
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    }
+  });
+
+  return VanillaModal;
+})();
+
+(function () {
+  if (typeof define === "function" && define.amd) {
+    define("VanillaModal", function () {
+      return VanillaModal;
+    });
+  } else if (typeof module !== "undefined" && module.exports) {
+    module.exports = VanillaModal;
+  } else {
+    window.VanillaModal = VanillaModal;
+  }
+})();;'use strict';
 
 // global data
 var lotCoordinate = [],

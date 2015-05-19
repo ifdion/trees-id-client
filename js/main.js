@@ -1,31 +1,28 @@
 'use strict';
 
-console.log('hello from main');
+var opts = {
+	onOpen : function() {
+		console.log('onOpen hook');
 
-// function addEventListener(el, eventName, handler) {
-// 	if (el.addEventListener) {
-// 		el.addEventListener(eventName, handler);
-// 	} else {
-// 		el.attachEvent('on' + eventName, function(){
-// 			handler.call(el);
-// 		});
-// 	}
-// }
+		// var mapObjectID = this.getAttribute('href');
+		var mapObject = document.getElementById('trees-id-map');
+		var mapType = mapObject.getAttribute('data-map-type');
+
+		mapObject.style.display = 'block';
+
+		if (mapType == 'archive') {
+			archiveMap('trees-id-map');
+		} else if (mapType == 'single') {
+			singleMap('trees-id-map');
+		}
+	}
+}
+
+var modal = new VanillaModal(opts);
 
 function renderMap(e){
 	e.preventDefault();
-	var mapObjectID = this.getAttribute('href');
-	var mapObject = document.getElementById(mapObjectID);
-	var mapType = mapObject.getAttribute('data-map-type');
-
-	this.style.display = 'none';
-	mapObject.style.display = 'block';
-
-	if (mapType == 'archive') {
-		archiveMap(mapObjectID);
-	} else if (mapType == 'single') {
-		singleMap(mapObjectID);
-	}
+	modal.open('#modal-map');
 }
 
 var mapTrigger = document.getElementById('render-map-btn');

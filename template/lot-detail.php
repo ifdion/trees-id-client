@@ -17,8 +17,16 @@
 
 	<img class="tid-lot-image" src="<?php echo $lot_image ?>">
 
-	<a href="trees-id-map" id="render-map-btn" class="render-map-btn">Lihat Peta</a>
-	<div id="trees-id-map" class="trees-id-map" data-map-type="single" data-id="<?php echo $lot_detail->id_lot ?>" data-tree-page="<?php echo $tree_page ?>"></div>
+	<a href="#modal-map" id="render-map-btn" class="render-map-btn">Lihat Peta</a>
+	<div id="modal-map" style="display:none">
+		<div id="trees-id-map" class="trees-id-map" data-map-type="single" data-id="<?php echo $lot_detail->id_lot ?>" data-tree-page="<?php echo $tree_page ?>"></div>
+	</div>
+	<div class="modal">
+		<div class="modal-inner">
+			<a rel="modal:close">&times;</a>
+			<div class="modal-content"></div>
+		</div>
+	</div>
 
 	<div id="" class="tid-statistic">
 		<?php if (isset($lot_detail->nama_petani)): ?>

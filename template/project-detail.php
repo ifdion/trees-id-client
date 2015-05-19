@@ -41,9 +41,16 @@
 		</dl>
 	</div>
 
-	<a href="trees-id-map" id="render-map-btn" class="render-map-btn">Lihat Peta</a>
-	<div id="trees-id-map" class="trees-id-map" data-map-type="archive" data-project_id="<?php echo $project_detail->id_project ?>" data-lot-page="<?php echo $lot_page ?>"></div>
-
+	<a href="#modal-map" id="render-map-btn" class="render-map-btn">Lihat Peta</a>
+	<div id="modal-map" style="display:none">
+		<div id="trees-id-map" class="trees-id-map" data-map-type="archive" data-project_id="<?php echo $project_detail->id_project ?>" data-lot-page="<?php echo $lot_page ?>"></div>
+	</div>
+	<div class="modal">
+		<div class="modal-inner">
+			<a rel="modal:close">&times;</a>
+			<div class="modal-content"></div>
+		</div>
+	</div>
 	<nav class="tid-project-nav">
 		<ul>
 			<li><a class="tid-nav tid-nav-block" href="<?php echo $permalink . $connector. 'view=block&project='.$project_detail->id_project ?>">Block</a></li>

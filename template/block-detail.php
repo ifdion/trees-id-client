@@ -21,8 +21,17 @@
 	</div>
 	<img class="tid-block-image" src="<?php echo $block_image ?>">
 
-	<a href="trees-id-map" id="render-map-btn" class="render-map-btn">Lihat Peta</a>
-	<div id="trees-id-map" class="trees-id-map" data-map-type="archive" data-block_id="<?php echo $block_detail->id_block ?>" data-lot-page="<?php echo $lot_page ?>"></div>
+
+	<a href="#modal-map" id="render-map-btn" class="render-map-btn">Lihat Peta</a>
+	<div id="modal-map" style="display:none">
+		<div id="trees-id-map" class="trees-id-map" data-map-type="archive" data-block_id="<?php echo $block_detail->id_block ?>" data-lot-page="<?php echo $lot_page ?>"></div>
+	</div>
+	<div class="modal">
+		<div class="modal-inner">
+			<a rel="modal:close">&times;</a>
+			<div class="modal-content"></div>
+		</div>
+	</div>	
 
 	<h2 class="tid-lot-archive-title">Daftar Lot</h2>
 	<div class="tid-lot-archive">

@@ -8,9 +8,9 @@
 		$connector = '&';
 	}
 
-	echo '<pre>';
-	print_r($program_detail);
-	echo '</pre>';
+	// echo '<pre>';
+	// print_r($program_detail);
+	// echo '</pre>';
 ?>
 <div class="tid-program-detail tid-shortcode">
 	<h1><?php echo $program_detail->nama_program ?></h1>
@@ -43,8 +43,16 @@
 		</dl>
 	</div>
 
-	<a href="trees-id-map" id="render-map-btn" class="render-map-btn">Lihat Peta</a>
-	<div id="trees-id-map" class="trees-id-map" data-map-type="archive" data-program_id="<?php echo $program_id ?>" data-lot-page="<?php echo $lot_page ?>"></div>
+	<a href="#modal-map" id="render-map-btn" class="render-map-btn">Lihat Peta</a>
+	<div id="modal-map" style="display:none">
+		<div id="trees-id-map" class="trees-id-map" data-map-type="archive" data-program_id="<?php echo $program_id ?>" data-lot-page="<?php echo $lot_page ?>"></div>
+	</div>
+	<div class="modal">
+		<div class="modal-inner">
+			<a rel="modal:close">&times;</a>
+			<div class="modal-content"></div>
+		</div>
+	</div>
 
 	<nav class="tid-program-nav">
 		<ul>
