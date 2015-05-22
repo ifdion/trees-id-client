@@ -404,7 +404,7 @@ function tid_view_tree_shortcode( $atts ) {
 			// search tree by nohp
 			if (isset($_GET['nohp'])){
 				$nohp = $_GET['nohp'];
-				$url =  'http://api.trees.id/?object=tree&nohp='.$nohp.'&json_ori=yes&per_page=600';
+				$url =  'http://api.trees.id/?object=tree&nohp='.$nohp.'&json_ori=yes&per_page=200';
 
 				$response = wp_remote_get($url );
 				$json_api = json_decode($response['body'], true);
