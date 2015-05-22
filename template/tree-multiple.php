@@ -10,7 +10,7 @@
 		</form>
 	<?php endif ?>
 	<?php if (isset($tree_id_str )): ?>
-		<h3>Pohon Donatur <?php echo $nama_donatur; ?></h3>
+		<h3>Pohon Donatur <?php echo ucwords(strtolower($nama_donatur)); ?> Sejumlah <?php echo $totalCountTree; ?> Pohon</h3>
 		<div id="trees-id-map" class="trees-id-map" data-map-type="tree" data-id="<?php echo $tree_id_str ?>"></div>
 		<br>
 		<h3>Pohon ini berada di lot

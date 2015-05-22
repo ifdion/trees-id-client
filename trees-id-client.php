@@ -404,7 +404,7 @@ function tid_view_tree_shortcode( $atts ) {
 			// search tree by nohp
 			if (isset($_GET['nohp'])){
 				$nohp = $_GET['nohp'];
-				$url =  'http://api.trees.id/?object=tree&nohp='.$nohp.'&json_ori=yes';
+				$url =  'http://api.trees.id/?object=tree&nohp='.$nohp.'&json_ori=yes&per_page=600';
 
 				$response = wp_remote_get($url );
 				$json_api = json_decode($response['body'], true);
@@ -413,6 +413,7 @@ function tid_view_tree_shortcode( $atts ) {
 					$tree_id_str = '';
 					$tree_lot = [];
 					$dataTree = $json_api['data'];
+					$totalCountTree = $json_api['totalCount'];
 
 					foreach ($dataTree as $key => $value) {
 						$nama_donatur = $value['nama_donatur'];
