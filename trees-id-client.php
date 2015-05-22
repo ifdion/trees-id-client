@@ -415,6 +415,7 @@ function tid_view_tree_shortcode( $atts ) {
 					$dataTree = $json_api['data'];
 
 					foreach ($dataTree as $key => $value) {
+						$nama_donatur = $value['nama_donatur'];
 						$tree_id_str .= $value['id_tree'].',';
 						if (!in_array($value['tree_lot_id'], $tree_lot)) {
 							$tree_lot[$value['tree_lot_id']] =  $value['nama_lot'];
