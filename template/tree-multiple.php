@@ -3,7 +3,7 @@
 	<?php if ($search_by): ?>
 		<form action="" method="GET" role="form">
 			<div class="form-group">
-				<label for="">No Telepon</label>
+				<label for="">No Telepon2</label>
 				<input type="text" class="form-control" id="" placeholder="Masukkan No HP" name="<?php echo $search_by ?>">
 			</div>
 			<button type="submit" class="btn btn-primary">Cari</button>
