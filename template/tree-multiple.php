@@ -11,7 +11,7 @@
 	<?php endif ?>
 	<?php if (isset($tree_id_str )): ?>
 		<h3>Pohon Donatur <?php echo ucwords(strtolower($nama_donatur)); ?> Sejumlah <?php echo $totalCountTree; ?> Pohon</h3>
-		<div id="trees-id-map" class="trees-id-map" data-map-type="tree" data-id="<?php echo $tree_id_str ?>"></div>
+		<div id="trees-id-map" class="trees-id-map" data-map-type="archive-tree" data-nohp="<?php echo $nohp ?>" data-tree-page="http://portal.trees.id/tree-view-new/[lot]/[offset]"></div>
 		<br>
 		<h3>Pohon ini berada di lot
 		<?php foreach ($tree_lot as $key => $value): ?>
