@@ -23,7 +23,8 @@
     "leaflet-heat": "http://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js",
     "leaflet": "~0.7.3",
     "blueimp-load-image": "~1.13.0",
-    "exif-js": "*"
+    "exif-js": "*",
+    "trees-id-map": "https://github.com/ifdion/trees-id-map.git"
   },
   "devDependencies": {}
 }
