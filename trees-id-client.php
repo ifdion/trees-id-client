@@ -103,11 +103,6 @@ function tid_shortcode( $atts ) {
 				}
 			}
 
-				// echo $lot_endpoint;
-				// echo '<pre>';
-				// print_r($response);
-				// echo '</pre>';
-
 			// tree detail API call
 			if ( false == ( $tree_detail = get_transient('tid-'. $entity.'-'.$lot_id.'-'.$tree_offset ) ) ) {
 				$response = wp_remote_get( $api_endpoint , $args);
@@ -140,8 +135,8 @@ function tid_shortcode( $atts ) {
 		$template = 'template/'.$entity.'-detail.php';
 
 		// check for custom default template
-		if (locate_template('tid/'.$entity.'-detail.php') != '') {
-			$template = get_stylesheet_directory().'/tid/'.$entity.'-detail.php';
+		if (locate_template('trees-id-client/'.$entity.'-detail.php') != '') {
+			$template = get_stylesheet_directory().'/trees-id-client/'.$entity.'-detail.php';
 		}
 
 		// check for custom template
@@ -213,8 +208,8 @@ function tid_shortcode( $atts ) {
 		$output .= '<div class="tid-lot-archive">';
 		foreach ($item_archive->data as $key => $item_detail){
 
-			if (locate_template('tid/'.$view.'-grid.php') != '') {
-				$template = get_stylesheet_directory().'/tid/'.$view.'-grid.php';
+			if (locate_template('trees-id-client/'.$view.'-grid.php') != '') {
+				$template = get_stylesheet_directory().'/trees-id-client/'.$view.'-grid.php';
 			} else {
 				$template = 'template/'.$view.'-grid.php';
 			}
@@ -231,8 +226,8 @@ function tid_shortcode( $atts ) {
 		$pagination = '';
 		if ($item_archive->totalPage > 1) {
 
-			if (locate_template('tid/template-pagination.php') != '') {
-				$template = get_stylesheet_directory().'tid/template-pagination.php';
+			if (locate_template('trees-id-client/template-pagination.php') != '') {
+				$template = get_stylesheet_directory().'trees-id-client/template-pagination.php';
 			} else {
 				$template = 'template/pagination.php';
 			}
@@ -272,8 +267,8 @@ function tid_shortcode( $atts ) {
 		$template = 'template/'.$entity.'-detail.php';
 
 		// check for custom default template
-		if (locate_template('tid/'.$entity.'-detail.php') != '') {
-			$template = get_stylesheet_directory().'/tid/'.$entity.'-detail.php';
+		if (locate_template('trees-id-client/'.$entity.'-detail.php') != '') {
+			$template = get_stylesheet_directory().'/trees-id-client/'.$entity.'-detail.php';
 		}
 
 		// check for custom template
@@ -293,58 +288,13 @@ function tid_shortcode( $atts ) {
 add_shortcode( 'trees-id', 'tid_shortcode' );
 
 /**
- * register additional stylesheet and script file if shortcode is present
- *
- * @return void
- * @author 
- **/
-function tid_shortcode_scripts() {
-	global $post;
-	if( (is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'trees-id')) || (is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'trees-id-view-tree')) ) {
-		if (WP_DEBUG == true) {
-			wp_register_style( 'trees-id', plugins_url( 'trees-id-client/css/trees-id-client.css' ), array(),'0.0' );
-			wp_register_script( 'trees-id-client-plugin',plugins_url( 'trees-id-client/js/trees-id-client-plugin.js' ), array(),'0.0',true);
-			wp_register_script( 'trees-id',plugins_url( 'trees-id-client/js/main.js' ),array('underscore','trees-id-client-plugin'),'0.0',true);
-
-		} else {
-			wp_register_style( 'trees-id', plugins_url( 'trees-id-client/css/trees-id-client.min.css' ), array(),'0.0' );
-			wp_register_script( 'trees-id',plugins_url( 'trees-id-client/js/trees-id-client.min.js' ),array('underscore'),'0.0',true);
-		}
-
-		wp_enqueue_style('trees-id' );
-		wp_enqueue_script('trees-id' );
-
-	}
-}
-add_action( 'wp_enqueue_scripts', 'tid_shortcode_scripts');
-
-/**
- * delete saved transient for debuging purposes
- *
- * @return void
- * @author 
- **/
-function process_delete_tid_transient() {
-	global $wpdb;
-	$namespace = '_tid-';
-	$sql = "DELETE FROM {$wpdb->options} WHERE option_name like '%$namespace%' ";
-	$wpdb->query($sql);
-
-	echo 'deleted transient';
-
-	die();
-	exit();
-}
-add_action('wp_ajax_delete_tid_transient', 'process_delete_tid_transient');
-add_action('wp_ajax_nopriv_delete_tid_transient', 'process_delete_tid_transient');
-
-/**
  * shortcode view tree
  *
  * @return void
  * @author 
  **/
 function tid_view_tree_shortcode( $atts ) {
+	global $post;
 
 	$args = array(
 		'timeout'     => 500,
@@ -364,11 +314,129 @@ function tid_view_tree_shortcode( $atts ) {
 
 	$atts = shortcode_atts(
 		array(
+			// archive parameter
+			'lot_id'=> 0,
+			'donatur_email'=> 0,
+			'code'=> 0,
+			'invoice'=> 0,
+			'nohp'=> 0,
+			'affiliate'=> 0,
+			// single parameter
+			'tree_offset' => 0,
+			'single_id' => 0,
+			// old parameter
 			'search' => 0,
 			'meta_key' => 0,
 			'lot_page' => 0,
+			//display paramater
+			'template' => '',
 		), $atts, 'trees-id-view-tree' );
 	
+	$custom_template = $atts['template'];
+	$view = 'none';
+	// get lot page
+
+	// echo '<pre>';
+	// print_r($post);
+	// echo '</pre>';
+	$tree_page = get_permalink($post);
+	$connector = '&';
+	if (get_option('permalink_structure' )) {
+		$connector = '?';
+	}
+
+	// check for archive attribute
+	$archive_variable = array(
+		'lot_id' => $atts['lot_id'],
+		'donatur_email' => $atts['donatur_email'],
+		'code' => $atts['code'],
+		'invoice' => $atts['invoice'],
+		'nohp' => $atts['nohp'],
+		'affiliate' => $atts['affiliate'],
+	);
+	$archive_query_var = array();
+	foreach ($archive_variable as $key => $value) {
+		if ($value) {
+			$view = 'archive';
+			$archive_query_var[$key] = $value;
+		}
+	}
+
+	// check for single attribute
+	$single_query_var = array();
+	if ($atts['single_id']) {
+		$view = 'single';
+		$single_query_var['single_id'] = $atts['single_id'];
+	} elseif ($atts['tree_offset'] && $atts['lot_id']){
+		$view = 'single';
+		$single_query_var['tree_offset'] = $atts['tree_offset'];
+		$single_query_var['lot_id'] = $atts['lot_id'];
+	}
+
+	// check for archive request
+	$archive_request = array();
+	foreach ($archive_variable as $key => $value) {
+		if (isset($_REQUEST[$key])) {
+			$view = 'archive-request';
+			$archive_request[$key] = $_REQUEST[$key];
+		}
+	}
+
+	// check for archive request
+	$single_request = array();
+	if (isset($_REQUEST['single_id'])) {
+		$view = 'single-request';
+		$single_request['single_id'] = $_REQUEST['single_id'];
+	} elseif (isset($_REQUEST['tree_offset']) && isset($_REQUEST['lot_id'])){
+		$view = 'single-request';
+		$single_request['tree_offset'] = $_REQUEST['tree_offset'];
+		$single_request['lot_id'] = $_REQUEST['lot_id'];
+	}
+
+	switch ($view) {
+		case 'archive':
+			$query_var = $archive_query_var;
+			$template = 'archive';
+			break;
+		case 'single':
+			$query_var = $single_query_var;
+			$template = 'single';
+			break;
+		case 'archive-request':
+			$query_var = $archive_request;
+			$template = 'archive';
+			break;
+		case 'single-request':
+			$query_var = $single_request;
+			$template = 'single';
+			break;
+		default:
+			return 'Invalid Request';
+			break;
+	}
+
+	$template = 'template/tree-'.$template.'.php';
+
+	// check for custom default template
+	if (locate_template('trees-id-client/tree-'.$template.'.php') != '') {
+		$template = get_stylesheet_directory().'/trees-id-client/'.$entity.'-detail.php';
+	}
+
+	// check for custom template
+	if ($custom_template != '' && locate_template($custom_template) != '') {
+		$template = get_stylesheet_directory().'/'.$custom_template;
+	}
+
+	if (isset($query_var)) {
+		ob_start();
+		include $template;
+		$query_var = $query_var;
+		$output = ob_get_contents();
+		ob_end_clean();
+		return $output;
+	}
+
+	// custom parameter
 	$search_by = $atts['search'];
 	$meta_key = $atts['meta_key'];
 	$lot_page = $atts['lot_page'];
@@ -428,19 +496,58 @@ function tid_view_tree_shortcode( $atts ) {
 		}
 	}
 
-	// echo '<pre>';
-	// print_r($dataTree);
-	// print_r($tree_lot);
-	// echo '</pre>';
-
 	ob_start();
 	include 'template/tree-multiple.php';
 	$output = ob_get_contents();
 	ob_end_clean();
 	return $output;
-
 }
 add_shortcode( 'trees-id-view-tree', 'tid_view_tree_shortcode' );
 
+/**
+ * register additional stylesheet and script file if shortcode is present
+ *
+ * @return void
+ * @author 
+ **/
+function tid_shortcode_scripts() {
+	global $post;
+	if( (is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'trees-id')) || (is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'trees-id-view-tree')) ) {
+		if (WP_DEBUG == true) {
+			wp_register_style( 'trees-id', plugins_url( 'trees-id-client/css/trees-id-client.css' ), array(),'0.0' );
+			wp_register_script( 'trees-id-client-plugin',plugins_url( 'trees-id-client/js/trees-id-client-plugin.js' ), array(),'0.0',true);
+			wp_register_script( 'trees-id',plugins_url( 'trees-id-client/js/main.js' ),array('underscore','trees-id-client-plugin'),'0.0',true);
+
+		} else {
+			wp_register_style( 'trees-id', plugins_url( 'trees-id-client/css/trees-id-client.min.css' ), array(),'0.0' );
+			wp_register_script( 'trees-id',plugins_url( 'trees-id-client/js/trees-id-client.min.js' ),array('underscore'),'0.0',true);
+		}
+
+		wp_enqueue_style('trees-id' );
+		wp_enqueue_script('trees-id' );
+
+	}
+}
+add_action( 'wp_enqueue_scripts', 'tid_shortcode_scripts');
+
+/**
+ * delete saved transient for debuging purposes
+ *
+ * @return void
+ * @author 
+ **/
+function process_delete_tid_transient() {
+	global $wpdb;
+	$namespace = '_tid-';
+	$sql = "DELETE FROM {$wpdb->options} WHERE option_name like '%$namespace%' ";
+	$wpdb->query($sql);
+
+	echo 'deleted transient';
+
+	die();
+	exit();
+}
+add_action('wp_ajax_delete_tid_transient', 'process_delete_tid_transient');
+add_action('wp_ajax_nopriv_delete_tid_transient', 'process_delete_tid_transient');
 
 ?>

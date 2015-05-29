@@ -31,24 +31,8 @@ if (mapTrigger) {
 	var mapObject = document.getElementById('trees-id-map');
 	var mapType = mapObject.getAttribute('data-map-type');
 	if (mapType == 'archive-tree'){
-		console.log('start archive tree');
-		
-		var APIurl = 'http://api.trees.id/?object=tree&per_page=20&callback=callback';
-		var queryParameter = [];
-
-		var treePage = mapObject.getAttribute('data-tree-page');
-
-		archiveParameter.forEach(function(item, i){
-			var parameterValue = mapObject.getAttribute('data-'+item);
-			if (parameterValue) {
-				queryParameter[item] = parameterValue;
-				APIurl = APIurl + '&' + item + '=' + parameterValue;
-			}
-		});
-		mapObject.style.display = 'block';
-		archiveMapTree(APIurl,treeCoordinate,treeData,1,treePage);
+		archiveTreeMap('trees-id-map');
 	} else if (mapObject) {
-		mapObject.style.display = 'block';
 		treeMap('trees-id-map');
 	}
 }

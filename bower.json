@@ -24,7 +24,8 @@
     "leaflet": "~0.7.3",
     "blueimp-load-image": "~1.13.0",
     "exif-js": "*",
-    "trees-id-map": "https://github.com/ifdion/trees-id-map.git"
+    "trees-id-map": "https://github.com/ifdion/trees-id-map.git",
+    "vanilla-modal": "https://github.com/thephuse/vanilla-modal.git"
   },
   "devDependencies": {}
 }
