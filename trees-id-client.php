@@ -411,8 +411,9 @@ function tid_view_tree_shortcode( $atts ) {
 			$template = 'single';
 			break;
 		default:
-			return 'Invalid Request';
-			break;
+			$template = 'archive';
+		// 	return 'Invalid Request';
+		// 	break;
 	}
 
 	$template = 'template/tree-'.$template.'.php';
