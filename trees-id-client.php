@@ -479,7 +479,7 @@ function tid_view_tree_shortcode( $atts ) {
 
 				if ($json_api['success'] == 1){
 					$tree_id_str = '';
-					$tree_lot = [];
+					$tree_lot = array();
 					$dataTree = $json_api['data'];
 					$totalCountTree = $json_api['totalCount'];
 
